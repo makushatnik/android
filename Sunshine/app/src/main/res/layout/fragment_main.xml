@@ -1,0 +1,12 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/match"
+    android:padding="@dimen/spacing_medium_32"
+    tools:context=".ForecastFragment">
+
+    <ListView
+        android:id="@+id/listview_forecast"
+        style="@style/wrap"
+        android:textSize="@dimen/font_medium_20"/>
+
+</FrameLayout>

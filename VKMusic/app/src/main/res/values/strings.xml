@@ -1,0 +1,28 @@
+<resources>
+    <!-- Font family -->
+    <string name="ff_regular">sans-serif</string>
+    <string name="ff_medium">sans-serif-medium</string>
+
+    <string name="app_name">Музыка ВКонтакте</string>
+    <integer name="com_vk_sdk_AppId">5547525</integer>
+    <integer name="query_max_length">15</integer>
+
+    <string name="notify_auth_by_VK">AUTH COMPLETE!</string>
+    <string name="main.search">Поиск музыки</string>
+    <string name="main.saved">Скаченное</string>
+    <string name="main.logout">Выйти</string>
+    
+    <!-- Settings -->
+    <string name="settings.title">Настройки</string>
+    <string name="settings.save_path_hint">Путь сохранения</string>
+    <string name="settings.save_path_summary">Путь сохранения для аудио-файлов</string>
+    <string name="settings.file_name_hint">Имя файла</string>
+    <string name="settings.change">Изменить</string>
+    <string name="settings.save_btn">Сохранить</string>
+
+    <!-- Search -->
+    <string name="search.title">Поиск</string>
+    <string name="search.search_txt_hint">Поисковый запрос</string>
+    <string name="search.search_btn">Найти</string>
+    <string name="search.my_audio">Мои аудиозаписи</string>
+</resources>

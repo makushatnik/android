@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/settings.title">
+
+    <EditTextPreference
+        android:key="save_path"
+        android:title="@string/settings.save_path_hint"
+        android:summary="@string/settings.save_path_summary"/>
+</PreferenceScreen>

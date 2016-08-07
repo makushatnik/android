@@ -1,0 +1,96 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
+    <style name="progress_dialog">
+        <item name="android:fullDark">@android:color/transparent</item>
+    </style>
+
+    <style name="fill">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="wrap">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="match">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="TabLayout.Selected" parent="Widget.Design.TabLayout">
+        <item name="android:colorBackground">@color/black</item>
+    </style>
+
+    <style name="control">
+        <item name="android:layout_width">@dimen/zero_size</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
+    <style name="control_button" parent="control">
+        <item name="android:layout_height">@dimen/control_size_32</item>
+    </style>
+
+    <style name="control_main" parent="control">
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="control_text">
+        <item name="android:layout_width">@dimen/size_medium_56</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_marginLeft">@dimen/spacing_small_8</item>
+        <item name="android:layout_marginRight">@dimen/spacing_small_8</item>
+        <item name="android:gravity">center</item>
+        <item name="android:text">00:00</item>
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
+    <style name="recycler_view" parent="fill">
+        <item name="android:layout_marginTop">@dimen/spacing_small_8</item>
+    </style>
+
+    <style name="control_layout" parent="fill">
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:background">@color/black</item>
+    </style>
+
+    <style name="progress_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/size_medium_56</item>
+        <item name="android:paddingBottom">@dimen/spacing_small_8</item>
+    </style>
+
+    <style name="buttons_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/size_large_72</item>
+        <item name="android:layout_marginBottom">@dimen/spacing_normal_16</item>
+        <item name="android:paddingTop">@dimen/spacing_small_8</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <!-- Toolbar -->
+    <style name="ToolBarStyle" parent="Theme.AppCompat">
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
+    </style>
+</resources>

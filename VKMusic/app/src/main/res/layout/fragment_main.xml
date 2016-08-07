@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                style="@style/match">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/audio_list"
+        style="@style/recycler_view"/>
+
+    <RelativeLayout
+        android:id="@+id/controls"
+        style="@style/control_layout">
+
+        <LinearLayout
+            android:id="@+id/buttons"
+            style="@style/buttons_layout">
+            <ImageView
+                android:id="@+id/repeat"
+                style="@style/control_button"
+                android:src="@drawable/repeat"/>
+            <ImageView
+                android:id="@+id/prev"
+                style="@style/control_button"
+                android:src="@drawable/previous"/>
+            <ImageView
+                android:id="@+id/play"
+                style="@style/control_main"
+                android:src="@drawable/play"/>
+            <ImageView
+                android:id="@+id/next"
+                style="@style/control_button"
+                android:src="@drawable/next"/>
+            <ImageView
+                android:id="@+id/shuffle"
+                style="@style/control_button"
+                android:src="@drawable/shuffle"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/progress_layout"
+            style="@style/progress_layout"
+            android:layout_below="@+id/buttons">
+
+            <TextView
+                android:id="@+id/progress"
+                style="@style/control_text"/>
+            <SeekBar
+                android:id="@+id/seekbar"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
+            <TextView
+                android:id="@+id/duration"
+                style="@style/control_text"/>
+
+        </LinearLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

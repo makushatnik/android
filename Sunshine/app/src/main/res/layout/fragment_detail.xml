@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             style="@style/match"
+             android:padding="@dimen/spacing_medium_32"
+             tools:context=".DetailActivity$DetailFragment">
+
+    <TextView
+        android:id="@+id/msg_txt"
+        style="@style/fill"
+        android:text="11111"
+        android:textSize="@dimen/font_medium_20"/>
+
+</RelativeLayout>

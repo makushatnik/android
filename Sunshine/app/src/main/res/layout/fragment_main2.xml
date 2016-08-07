@@ -1,0 +1,39 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:padding="@dimen/spacing_medium_32"
+    tools:context=".MainActivity$PlaceholderFragment">
+
+    <TextView android:text="Today, June 24"
+              android:textSize="@dimen/font_medium_20"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:id="@+id/today"/>
+
+    <TextView android:text="21'"
+              android:textSize="@dimen/font_large_26"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="@dimen/spacing_medium_32"
+              android:layout_marginLeft="@dimen/spacing_medium_32"
+              android:layout_below="@+id/today"
+              android:id="@+id/grad_top"/>
+
+    <TextView android:text="8'"
+              android:textSize="@dimen/font_large_26"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginLeft="@dimen/spacing_medium_32"
+              android:layout_below="@+id/grad_top"
+              android:id="@+id/grad_bottom"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_large_56"
+        android:id="@+id/imageView"
+        android:src="@drawable/cloudy"
+        android:scaleType="centerCrop"
+        android:layout_alignParentRight="true"/>
+
+</RelativeLayout>

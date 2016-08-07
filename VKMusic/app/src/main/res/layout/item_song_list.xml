@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_song_list"
+    style="@style/fill"
+    android:layout_marginLeft="@dimen/spacing_small_8"
+    android:layout_marginRight="@dimen/spacing_small_8"
+    android:background="@color/white">
+
+    <LinearLayout
+        style="@style/fill"
+        android:padding="@dimen/spacing_small_8"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/author_txt"
+                style="@style/fill"
+                android:layout_marginBottom="@dimen/spacing_small_8"
+                android:text="author"
+                android:textColor="@color/black"
+                android:textSize="@dimen/font_medium_20"
+                android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/title_txt"
+                style="@style/fill"
+                android:text="title"
+                android:textColor="@color/black"
+                android:textSize="@dimen/font_medium_20"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingTop="@dimen/spacing_small_8"
+                android:paddingBottom="@dimen/spacing_small_8"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/duration_txt"
+                    style="@style/fill"
+                    android:paddingLeft="@dimen/spacing_small_8"
+                    android:text="00:00"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/font_small_14"/>
+                <ImageView
+                    android:id="@+id/download_iv"
+                    style="@style/wrap"
+                    android:paddingLeft="@dimen/spacing_small_8"
+                    android:src="@drawable/download"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

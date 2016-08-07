@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+    android:id="@+id/list_item_forecast_textview"
+    style="@style/fill"
+    android:gravity="center_vertical"
+    android:minHeight="?android:attr/listPreferredItemHeight"
+    android:text="Today - Sunny - 88 / 63"
+    android:textSize="@dimen/font_medium_20"
+    xmlns:android="http://schemas.android.com/apk/res/android"/>
