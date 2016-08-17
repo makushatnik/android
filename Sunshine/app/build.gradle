@@ -18,14 +18,28 @@ android {
         versionName "1.0"
     }
     buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        debug {
+            applicationIdSuffix "debug"
         }
     }
+	buildTypes.each {
+        it.buildConfigField 'String', 'OPEN_WEATHER_MAP_API_KEY', "\"7653e043757c5196ede5f6f64629f9fd\""
+    }
+}
+
+task copyOutputApk(type: Copy) {
+    from 'build/outputs/apk'
+    into 'apk'
+    exclude '**/*-unaligned.apk'
+}
+
+task buildMyDebug(dependsOn: ['clean', 'assembleDebug', 'copyOutputApk']) {
+    copyOutputApk.mustRunAfter assembleDebug
+    clean.mustRunAfter copyOutputApk
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:21.0.2'
 }
