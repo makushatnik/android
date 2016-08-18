@@ -1,4 +1,4 @@
-package com.example.android.sunshine.app;
+package com.cdesign.sunshine.ui;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -20,15 +20,16 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.android.sunshine.app.data.db.WeatherContract;
-import com.example.android.sunshine.app.data.db.WeatherContract.WeatherEntry;
-import com.example.android.sunshine.app.utils.Utils;
+import com.example.android.sunshine.app.R;
+import com.cdesign.sunshine.data.db.WeatherContract;
+import com.cdesign.sunshine.data.db.WeatherContract.WeatherEntry;
+import com.cdesign.sunshine.utils.Utils;
 
 /**
  * Created by Ageev Evgeny on 11.08.2016.
  */
-public class DetailsFragment extends Fragment implements LoaderCallbacks<Cursor> {
-    private static final String LOG_TAG = DetailsFragment.class.getSimpleName();
+public class DetailFragment extends Fragment implements LoaderCallbacks<Cursor> {
+    private static final String LOG_TAG = DetailFragment.class.getSimpleName();
     public static final String DETAIL_URI = "URI";
     private static final String FORECAST_SHARE_HASHTAG = " #SunshineApp";
 
@@ -71,7 +72,7 @@ public class DetailsFragment extends Fragment implements LoaderCallbacks<Cursor>
     public static final int COL_WEATHER_DEGREES = 8;
     public static final int COL_WEATHER_CONDITION_ID = 9;
 
-    public DetailsFragment() {
+    public DetailFragment() {
         setHasOptionsMenu(true);
     }
 
@@ -84,6 +85,7 @@ public class DetailsFragment extends Fragment implements LoaderCallbacks<Cursor>
         }
 
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
+        Log.d(LOG_TAG, "rootView = " + rootView);
         mIconView = (ImageView)rootView.findViewById(R.id.detail_icon);
         mDateView = (TextView)rootView.findViewById(R.id.detail_date_txt);
         mFriendlyDateView = (TextView)rootView.findViewById(R.id.detail_day_txt);
@@ -173,10 +175,10 @@ public class DetailsFragment extends Fragment implements LoaderCallbacks<Cursor>
         boolean isMetric = Utils.isMetric(getActivity());
 
         double high = data.getDouble(COL_WEATHER_MAX_TEMP);
-        String highStr = Utils.formatTemperature(getActivity(), high, isMetric);
+        String highStr = Utils.formatTemperature(getActivity(), high);
         mHighTempView.setText(highStr);
         double low = data.getDouble(COL_WEATHER_MIN_TEMP);
-        String lowStr = Utils.formatTemperature(getActivity(), low, isMetric);
+        String lowStr = Utils.formatTemperature(getActivity(), low);
         mLowTempView.setText(lowStr);
 
         float humidity = data.getFloat(COL_WEATHER_HUMIDITY);

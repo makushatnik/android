@@ -13,15 +13,13 @@
     	<TextView
         	android:id="@+id/detail_day_txt"
         	style="@style/wrap"
-        	android:text="Tomorrow"
-			android:textColor="@color/black"
+        	android:textColor="@color/black"
         	android:textSize="@dimen/font_small_24"
 			android:fontFamily="sans-serif-condensed"/>
 		<TextView
         	android:id="@+id/detail_date_txt"
         	style="@style/wrap"
-        	android:text="June 24"
-			android:textColor="@color/grey_700"
+        	android:textColor="@color/grey_700"
         	android:textSize="@dimen/font_small_16"
 			android:fontFamily="sans-serif-condensed"/>
 
@@ -38,14 +36,12 @@
 				<TextView
         			android:id="@+id/detail_high_txt"
         			style="@style/wrap"
-        			android:text="81°"
         			android:textSize="@dimen/font_large_96"
 					android:fontFamily="sans-serif-light"/>
 				<TextView
         			android:id="@+id/detail_low_txt"
         			style="@style/wrap"
 					android:layout_gravity="center_horizontal"
-        			android:text="-40°"
         			android:textSize="@dimen/font_medium_48"
 					android:textColor="@color/grey_700"/>
 			</LinearLayout>
@@ -57,13 +53,11 @@
 				android:orientation="vertical">
 				<ImageView
 					android:id="@+id/detail_icon"
-					style="@style/wrap"
-					android:src="@drawable/ic_launcher"/>
+					style="@style/wrap"/>
 				<TextView
         			android:id="@+id/detail_forecast_txt"
         			style="@style/wrap"
-        			android:text="Clear"
-					android:textColor="@color/grey_700"
+        			android:textColor="@color/grey_700"
 					android:textAppearance="?android:textAppearanceLarge"/>
 			</LinearLayout>	
 		</LinearLayout>
@@ -77,19 +71,16 @@
 			<TextView
 				android:id="@+id/detail_humidity_txt"
 				style="@style/fill"
-				android:text="48%"
 				android:textAppearance="?android:textAppearanceLarge"/>
 			<TextView
 				android:id="@+id/detail_wind_txt"
 				style="@style/fill"
 				android:layout_marginTop="@dimen/spacing_very_small_4"
-				android:text="6 Km/h NW"
 				android:textAppearance="?android:textAppearanceLarge"/>
 			<TextView
 				android:id="@+id/detail_pressure_txt"
 				style="@style/fill"
 				android:layout_marginTop="@dimen/spacing_very_small_4"
-				android:text="1014"
 				android:textAppearance="?android:textAppearanceLarge"/>
 		</LinearLayout>
 	</LinearLayout>

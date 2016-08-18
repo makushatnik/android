@@ -1,10 +1,12 @@
-package com.example.android.sunshine.app;
+package com.cdesign.sunshine.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.example.android.sunshine.app.R;
 
 public class DetailActivity extends ActionBarActivity {
 
@@ -15,9 +17,9 @@ public class DetailActivity extends ActionBarActivity {
 
         if (savedInstanceState == null) {
             Bundle args = new Bundle();
-            args.putParcelable(DetailsFragment.DETAIL_URI, getIntent().getData());
+            args.putParcelable(DetailFragment.DETAIL_URI, getIntent().getData());
 
-            DetailsFragment fragment = new DetailsFragment();
+            DetailFragment fragment = new DetailFragment();
             fragment.setArguments(args);
 
             getSupportFragmentManager().beginTransaction()

@@ -1,15 +1,14 @@
-package com.example.android.sunshine.app;
+package com.cdesign.sunshine.ui;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,15 +18,14 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.android.sunshine.app.data.FetchWeatherTask;
-import com.example.android.sunshine.app.data.ForecastAdapter;
-import com.example.android.sunshine.app.data.db.WeatherContract;
-import com.example.android.sunshine.app.utils.Utils;
+import com.cdesign.sunshine.data.ForecastAdapter;
+import com.example.android.sunshine.app.R;
+import com.cdesign.sunshine.data.db.WeatherContract;
+import com.cdesign.sunshine.sync.SunshineSyncAdapter;
+import com.cdesign.sunshine.utils.Utils;
 
-/**
- * A placeholder fragment containing a simple view.
- */
 public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor> {
+    private static final String LOG_TAG = ForecastFragment.class.getSimpleName();
     private ForecastAdapter mForecastAdapter;
 
     private ListView mListView;
@@ -37,15 +35,8 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
     private static final String SELECTED_KEY = "selected_position";
 
     private static final int FORECAST_LOADER = 0;
-    // For the forecast view we're showing only a small subset of the stored data.
-    // Specify the columns we need.
+
     private static final String[] FORECAST_COLUMNS = {
-            // In this case the id needs to be fully qualified with a table name, since
-            // the content provider joins the location & weather tables in the background
-            // (both have an _id column)
-            // On the one hand, that's annoying.  On the other, you can search the weather table
-            // using the location set by the user, which is only in the Location table.
-            // So the convenience is worth it.
             WeatherContract.WeatherEntry.TABLE_NAME + "." + WeatherContract.WeatherEntry._ID,
             WeatherContract.WeatherEntry.COLUMN_DATE,
             WeatherContract.WeatherEntry.COLUMN_SHORT_DESC,
@@ -57,8 +48,6 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
             WeatherContract.LocationEntry.COLUMN_COORD_LONG
     };
 
-    // These indices are tied to FORECAST_COLUMNS.  If FORECAST_COLUMNS changes, these
-    // must change.
     public static final int COL_WEATHER_ID = 0;
     public static final int COL_WEATHER_DATE = 1;
     public static final int COL_WEATHER_DESC = 2;
@@ -75,6 +64,8 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        updateWeather();
     }
 
     @Override
@@ -88,10 +79,33 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
 		if (id == R.id.action_refresh) {
             updateWeather();
             return true;
-		} else {
-            return super.onOptionsItemSelected(item);
+		} else if (id == R.id.action_map) {
+            openPreferredLocationInMap();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
 	}
+
+    private void openPreferredLocationInMap() {
+        if ( null != mForecastAdapter ) {
+            Cursor c = mForecastAdapter.getCursor();
+            if ( null != c && c.getCount() > 0) {
+                c.moveToPosition(0);
+                String posLat = c.getString(COL_COORD_LAT);
+                String posLong = c.getString(COL_COORD_LONG);
+                Uri geoLocation = Uri.parse("geo:" + posLat + "," + posLong);
+
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(geoLocation);
+
+                if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                    startActivity(intent);
+                } else {
+                    Log.d(LOG_TAG, "Couldn't call " + geoLocation.toString() + ", no receiving apps installed!");
+                }
+            }
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -112,14 +126,7 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
             mPosition = pos;
         });
 
-        // If there's instance state, mine it for useful information.
-        // The end-goal here is that the user never knows that turning their device sideways
-        // does crazy lifecycle related things.  It should feel like some stuff stretched out,
-        // or magically appeared to take advantage of room, but data or place in the app was never
-        // actually *lost*.
         if (savedInstanceState != null && savedInstanceState.containsKey(SELECTED_KEY)) {
-            // The listview probably hasn't even been populated yet.  Actually perform the
-            // swapout in onLoadFinished.
             mPosition = savedInstanceState.getInt(SELECTED_KEY);
         }
 
@@ -128,17 +135,9 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
         return rootView;
     }
 
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//        updateWeather();
-//    }
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         // When tablets rotate, the currently selected list item needs to be saved.
-        // When no item is selected, mPosition will be set to Listview.INVALID_POSITION,
-        // so check for that before storing.
         if (mPosition != ListView.INVALID_POSITION) {
             outState.putInt(SELECTED_KEY, mPosition);
         }
@@ -164,17 +163,7 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
     }
 
     private void updateWeather() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String location = prefs.getString(getString(R.string.pref_location_key),
-                getString(R.string.pref_location_default));
-        FetchWeatherTask task = new FetchWeatherTask(getActivity());
-        task.execute(location);
-    }
-
-    private void openDetails(String msg) {
-        Intent i = new Intent(getActivity(), DetailActivity.class);
-        i.putExtra(Intent.EXTRA_TEXT, msg);
-        startActivity(i);
+        SunshineSyncAdapter.syncImmediately(getActivity());
     }
 
     private void showToast(String message) {

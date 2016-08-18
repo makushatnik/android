@@ -1,4 +1,4 @@
-package com.example.android.sunshine.app.data.db;
+package com.cdesign.sunshine.data.db;
 
 import android.annotation.TargetApi;
 import android.content.ContentProvider;
@@ -9,6 +9,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.util.Log;
+
+import com.cdesign.sunshine.data.db.WeatherContract;
+import com.cdesign.sunshine.data.db.WeatherDBHelper;
 
 /**
  * Created by Ageev Evgeny on 09.08.2016.

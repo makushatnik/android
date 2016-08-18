@@ -13,8 +13,7 @@
         <ImageView
             android:id="@+id/list_item_icon"
             style="@style/wrap"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_launcher"/>
+            android:layout_gravity="center"/>
     </FrameLayout>
 
     <LinearLayout
@@ -25,13 +24,11 @@
         <TextView
             android:id="@+id/list_item_date_txt"
             style="@style/wrap"
-            android:text="@string/tomorrow"
             android:fontFamily="sans-serif-condensed"
             android:textSize="@dimen/font_small_20"/>
         <TextView
             android:id="@+id/list_item_forecast_txt"
             style="@style/wrap"
-            android:text="@string/clear"
             android:fontFamily="sans-serif-condensed"
             android:textAppearance="?android:textAppearanceSmall"/>
     </LinearLayout>
@@ -46,14 +43,12 @@
             android:id="@+id/list_item_high_txt"
             style="@style/wrap"
             android:layout_gravity="center"
-            android:text="@string/high"
             android:fontFamily="sans-serif-condensed"
             android:textAppearance="?android:textAppearanceLarge"/>
         <TextView
             android:id="@+id/list_item_low_txt"
             style="@style/wrap"
             android:layout_gravity="center"
-            android:text="@string/low"
             android:fontFamily="sans-serif-condensed"
             android:textAppearance="?android:textAppearanceSmall"/>
     </LinearLayout>

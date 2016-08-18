@@ -1,4 +1,4 @@
-package com.example.android.sunshine.app.data.db;
+package com.cdesign.sunshine.data.db;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
