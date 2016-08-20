@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/spacing_normal_16">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="@dimen/size_medium_56"
+            android:orientation="vertical">
+
+            <!-- Header: Day, Date -->
+            <TextView
+                android:id="@+id/detail_day_textview"
+                style="@style/wrap"
+                android:minWidth="@dimen/size_extra_large_120"
+                android:textSize="@dimen/font_small_24"
+                android:fontFamily="sans-serif-condensed"/>
+
+            <TextView
+                android:id="@+id/detail_date_textview"
+                style="@style/wrap"
+                android:textColor="@color/grey_700"
+                android:textSize="@dimen/font_small_20"
+                android:fontFamily="sans-serif-condensed"/>
+
+        </LinearLayout>
+
+        <!-- Main content: high, low, art, weather state -->
+        <LinearLayout
+            style="@style/wrap"
+            android:layout_marginLeft="@dimen/spacing_normal_16"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/detail_high_textview"
+                style="@style/wrap"
+                android:textSize="@dimen/font_large_96"
+                android:fontFamily="sans-serif-light"/>
+
+            <TextView
+                android:id="@+id/detail_low_textview"
+                style="@style/wrap"
+                android:layout_marginLeft="@dimen/spacing_small_8"
+                android:textColor="@color/grey_700"
+                android:textSize="@dimen/font_medium_48"/>
+
+            <!-- Humidity, wind, pressure -->
+            <TextView
+                android:id="@+id/detail_humidity_textview"
+                style="@style/wrap"
+                android:layout_marginTop="@dimen/spacing_very_small_4"
+                android:fontFamily="sans-serif-condensed"
+                android:textAppearance="?android:textAppearanceLarge"/>
+
+            <TextView
+                android:id="@+id/detail_pressure_textview"
+                style="@style/wrap"
+                android:layout_marginTop="@dimen/spacing_very_small_4"
+                android:fontFamily="sans-serif-condensed"
+                android:textAppearance="?android:textAppearanceLarge"/>
+
+            <TextView
+                android:id="@+id/detail_wind_textview"
+                style="@style/wrap"
+                android:layout_marginTop="@dimen/spacing_very_small_4"
+                android:fontFamily="sans-serif-condensed"
+                android:textAppearance="?android:textAppearanceLarge"/>
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/wrap"
+            android:layout_marginLeft="@dimen/spacing_normal_16"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/detail_icon"
+                style="@style/wrap" />
+
+            <TextView
+                android:id="@+id/detail_forecast_textview"
+                style="@style/wrap"
+                android:textColor="@color/grey_700"
+                android:fontFamily="sans-serif-condensed"
+                android:textAppearance="?android:textAppearanceLarge"/>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
