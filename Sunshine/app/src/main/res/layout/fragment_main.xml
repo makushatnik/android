@@ -9,5 +9,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="@null"/>
+    <TextView
+        android:id="@+id/listview_forecast_empty"
+        style="@style/match"
+        android:padding="@dimen/spacing_normal_16"
+        android:paddingStart="@dimen/spacing_normal_16"
+        android:paddingEnd="@dimen/spacing_normal_16"
+        android:gravity="center_horizontal"
+        android:text="@string/empty_forecast_list"
+        android:textSize="@dimen/font_small_24"
+        android:textColor="@color/red"
+        android:textStyle="bold"/>
 
 </FrameLayout>

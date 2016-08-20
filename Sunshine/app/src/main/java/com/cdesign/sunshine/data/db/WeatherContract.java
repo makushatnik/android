@@ -10,7 +10,7 @@ import android.text.format.Time;
  * Created by Ageev Evgeny on 09.08.2016.
  */
 public class WeatherContract {
-    public static final String CONTENT_AUTHORITY = "com.example.android.sunshine.app";
+    public static final String CONTENT_AUTHORITY = "com.cdesign.sunshine";
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
     public static final String PATH_WEATHER = "weather";
     public static final String PATH_LOCATION = "location";

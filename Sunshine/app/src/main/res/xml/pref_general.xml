@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res/"
     style="@style/match">
 
-    <EditTextPreference
+    <com.cdesign.sunshine.ui.LocationEditTextPreference
         android:key="@string/pref_location_key"
         android:title="@string/pref_location_label"
         android:defaultValue="@string/pref_location_default"
         android:inputType="text"
-        android:singleLine="true"/>
+        android:singleLine="true"
+        custom:minLength="3"/>
 
     <ListPreference
         android:key="@string/pref_units_key"
@@ -16,6 +17,13 @@
         android:defaultValue="@string/pref_units_metric"
         android:entryValues="@array/pref_unit_values"
         android:entries="@array/pref_unit_options"/>
+
+    <ListPreference
+        android:title="@string/pref_art_pack_label"
+        android:key="@string/pref_art_pack_key"
+        android:defaultValue="@string/pref_art_pack_sunshine"
+        android:entryValues="@array/pref_art_pack_values"
+        android:entries="@array/pref_art_pack_options" />
 
     <CheckBoxPreference
         android:key="@string/pref_notify_key"

@@ -2,6 +2,7 @@ package com.cdesign.sunshine.sync;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.annotation.SuppressLint;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.AbstractThreadedSyncAdapter;
@@ -14,20 +15,25 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SyncRequest;
 import android.content.SyncResult;
+import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.IntDef;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.text.format.Time;
 import android.util.Log;
 
-import com.example.android.sunshine.app.BuildConfig;
-import com.cdesign.sunshine.ui.MainActivity;
-import com.example.android.sunshine.app.R;
+import com.bumptech.glide.Glide;
+import com.cdesign.sunshine.BuildConfig;
+import com.cdesign.sunshine.R;
 import com.cdesign.sunshine.data.db.WeatherContract;
+import com.cdesign.sunshine.ui.MainActivity;
 import com.cdesign.sunshine.utils.ConstantManager;
 import com.cdesign.sunshine.utils.Utils;
 
@@ -39,17 +45,20 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Vector;
+import java.util.concurrent.ExecutionException;
 
 /**
- * Created by RealXaker on 18.08.2016.
+ * Created by Ageev Evgeny on 18.08.2016.
  */
 public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
     public static final String LOG_TAG = SunshineSyncAdapter.class.getSimpleName();
     //public static final int SYNC_INTERVAL = 60 * 180;//3 hours
-    public static final int SYNC_INTERVAL = 60 * 3;
+    public static final int SYNC_INTERVAL = 60 * 60;
     public static final int SYNC_FLEXTIME = SYNC_INTERVAL/3;
     private static final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
     private static final int WEATHER_NOTIFICATION_ID = 3004;
@@ -65,6 +74,22 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
     private static final int INDEX_MAX_TEMP = 1;
     private static final int INDEX_MIN_TEMP = 2;
     private static final int INDEX_SHORT_DESC = 3;
+
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({
+            LOCATION_STATUS_OK,
+            LOCATION_STATUS_SERVER_DOWN,
+            LOCATION_STATUS_SERVER_INVALID,
+            LOCATION_STATUS_UNKNOWN,
+            LOCATION_STATUS_INVALID
+    })
+    public @interface LocationStatus {}
+
+    public static final int LOCATION_STATUS_OK = 0;
+    public static final int LOCATION_STATUS_SERVER_DOWN = 1;
+    public static final int LOCATION_STATUS_SERVER_INVALID = 2;
+    public static final int LOCATION_STATUS_UNKNOWN = 3;
+    public static final int LOCATION_STATUS_INVALID = 4;
 
     public SunshineSyncAdapter(Context ctx, boolean autoInit) {
         super(ctx, autoInit);
@@ -114,7 +139,8 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
             }
 
             if (buffer.length() == 0) {
-                forecastJsonStr = null;
+                setLocationStatus(getContext(), LOCATION_STATUS_SERVER_DOWN);
+                return;
             }
 
             forecastJsonStr = buffer.toString();
@@ -125,11 +151,14 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
                 return;
             }
             getWeatherDataFromJson(forecastJsonStr, locationQuery);
+            setLocationStatus(getContext(), LOCATION_STATUS_OK);
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error ", e);
+            setLocationStatus(getContext(), LOCATION_STATUS_SERVER_DOWN);
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
+            setLocationStatus(getContext(), LOCATION_STATUS_SERVER_INVALID);
         } finally{
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -196,8 +225,26 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
         final String OWM_DESCRIPTION = "main";
         final String OWM_WEATHER_ID = "id";
 
+        final String OWM_MESSAGE_CODE = "cod";
+
 
         JSONObject forecastJson = new JSONObject(forecastJsonStr);
+
+        if ( forecastJson.has(OWM_MESSAGE_CODE) ) {
+            int errorCode = forecastJson.getInt(OWM_MESSAGE_CODE);
+
+            switch (errorCode) {
+                case HttpURLConnection.HTTP_OK:
+                    break;
+                case HttpURLConnection.HTTP_NOT_FOUND:
+                    setLocationStatus(getContext(), LOCATION_STATUS_INVALID);
+                    return;
+                default:
+                    setLocationStatus(getContext(), LOCATION_STATUS_SERVER_INVALID);
+                    return;
+            }
+        }
+
         JSONArray weatherArray = forecastJson.getJSONArray(OWM_LIST);
 
         JSONObject cityJson = forecastJson.getJSONObject(OWM_CITY);
@@ -208,6 +255,9 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
         double cityLongitude = cityCoord.getDouble(OWM_LONGITUDE);
 
         long locationId = addLocation(locationSetting, cityName, cityLatitude, cityLongitude);
+        if (locationId == -1) {
+            throw new JSONException("LOC_ID IS NULL!!!");
+        }
 
         Vector<ContentValues> cVVector = new Vector<ContentValues>(weatherArray.length());
 
@@ -290,6 +340,10 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
                 new String[]{locationSetting},
                 null);
 
+        if (locationCursor == null) {
+            Log.e(LOG_TAG, "NULL!!! loc - " + locationSetting + ", city - " + cityName + ", lat - " + lat + ", lon - " + lon);
+            return -1;
+        }
         if (locationCursor.moveToFirst()) {
             int locationIdIndex = locationCursor.getColumnIndex(WeatherContract.LocationEntry._ID);
             locationId = locationCursor.getLong(locationIdIndex);
@@ -338,6 +392,34 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
                     String desc = cursor.getString(INDEX_SHORT_DESC);
 
                     int iconId = Utils.getIconResourceForWeatherCondition(weatherId);
+                    Resources resources = ctx.getResources();
+                    int artResourceId = Utils.getArtResourceForWeatherCondition(weatherId);
+                    String artUrl = Utils.getArtUrlForWeatherCondition(ctx, weatherId);
+
+                    // On Honeycomb and higher devices, we can retrieve the size of the large icon
+                    // Prior to that, we use a fixed size
+                    @SuppressLint("InlinedApi")
+                    int largeIconWidth = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB
+                            ? resources.getDimensionPixelSize(android.R.dimen.notification_large_icon_width)
+                            : resources.getDimensionPixelSize(R.dimen.notify_large_icon_default);
+                    @SuppressLint("InlinedApi")
+                    int largeIconHeight = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB
+                            ? resources.getDimensionPixelSize(android.R.dimen.notification_large_icon_height)
+                            : resources.getDimensionPixelSize(R.dimen.notify_large_icon_default);
+
+                    // Retrieve the large icon
+                    Bitmap largeIcon;
+                    try {
+                        largeIcon = Glide.with(ctx)
+                                .load(artUrl)
+                                .asBitmap()
+                                .error(artResourceId)
+                                .fitCenter()
+                                .into(largeIconWidth, largeIconHeight).get();
+                    } catch (InterruptedException | ExecutionException e) {
+                        Log.e(LOG_TAG, "Error retrieving large icon from " + artUrl, e);
+                        largeIcon = BitmapFactory.decodeResource(resources, artResourceId);
+                    }
                     String title = ctx.getString(R.string.app_name);
 
                     String contentText = String.format(ctx.getString(R.string.format_notification),
@@ -390,5 +472,12 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
 
     public static void initializeSyncAdapter(Context ctx) {
         getSyncAccount(ctx);
+    }
+
+    private static void setLocationStatus(Context c, @LocationStatus int locationStatus){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
+        SharedPreferences.Editor spe = sp.edit();
+        spe.putInt(c.getString(R.string.pref_location_status_key), locationStatus);
+        spe.commit();
     }
 }

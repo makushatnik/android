@@ -20,7 +20,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.android.sunshine.app.R;
+import com.bumptech.glide.Glide;
+import com.cdesign.sunshine.R;
 import com.cdesign.sunshine.data.db.WeatherContract;
 import com.cdesign.sunshine.data.db.WeatherContract.WeatherEntry;
 import com.cdesign.sunshine.utils.Utils;
@@ -77,6 +78,12 @@ public class DetailFragment extends Fragment implements LoaderCallbacks<Cursor> 
     }
 
     @Override
+    public void onCreate(Bundle state) {
+        super.onCreate(state);
+        setRetainInstance(true);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Bundle args = getArguments();
@@ -85,7 +92,7 @@ public class DetailFragment extends Fragment implements LoaderCallbacks<Cursor> 
         }
 
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
-        Log.d(LOG_TAG, "rootView = " + rootView);
+
         mIconView = (ImageView)rootView.findViewById(R.id.detail_icon);
         mDateView = (TextView)rootView.findViewById(R.id.detail_date_txt);
         mFriendlyDateView = (TextView)rootView.findViewById(R.id.detail_day_txt);
@@ -159,37 +166,50 @@ public class DetailFragment extends Fragment implements LoaderCallbacks<Cursor> 
 
         int weatherId = data.getInt(COL_WEATHER_CONDITION_ID);
 
-        mIconView.setImageResource(Utils.getArtResourceForWeatherCondition(weatherId));
+        Glide.with(this)
+                .load(Utils.getArtUrlForWeatherCondition(getActivity(), weatherId))
+                .error(Utils.getArtResourceForWeatherCondition(weatherId))
+                .crossFade()
+                .into(mIconView);
 
         long date = data.getLong(COL_WEATHER_DATE);
         String friendlyDateText = Utils.getDayName(getActivity(), date);
         String dateText = Utils.getFormattedMonthDay(getActivity(), date);
+        Log.d(LOG_TAG, "mFriendlyDateView = " + mFriendlyDateView);
         mFriendlyDateView.setText(friendlyDateText);
         mDateView.setText(dateText);
 
-        String description = data.getString(COL_WEATHER_DESC);
+        //String description = data.getString(COL_WEATHER_DESC);
+        String description = Utils.getStringForWeatherCondition(getActivity(), weatherId);
         mDescriptionView.setText(description);
+        mDescriptionView.setContentDescription(getString(R.string.a11y_forecast, description));
 
-        mIconView.setContentDescription(description);
+        mIconView.setContentDescription(getString(R.string.a11y_forecast_icon, description));
 
         boolean isMetric = Utils.isMetric(getActivity());
 
         double high = data.getDouble(COL_WEATHER_MAX_TEMP);
         String highStr = Utils.formatTemperature(getActivity(), high);
         mHighTempView.setText(highStr);
+        mHighTempView.setContentDescription(getString(R.string.a11y_high_temp, highStr));
+
         double low = data.getDouble(COL_WEATHER_MIN_TEMP);
         String lowStr = Utils.formatTemperature(getActivity(), low);
         mLowTempView.setText(lowStr);
+        mLowTempView.setContentDescription(getString(R.string.a11y_high_temp, lowStr));
 
         float humidity = data.getFloat(COL_WEATHER_HUMIDITY);
         mHumidityView.setText(getActivity().getString(R.string.format_humidity, humidity));
+        mHumidityView.setContentDescription(mHumidityView.getText());
 
         float windSpeedStr = data.getFloat(COL_WEATHER_WIND_SPEED);
         float windDirStr = data.getFloat(COL_WEATHER_DEGREES);
         mWindView.setText(Utils.getFormattedWind(getActivity(), windSpeedStr, windDirStr));
+        mWindView.setContentDescription(mWindView.getText());
 
         float pressure = data.getFloat(COL_WEATHER_PRESSURE);
         mPressureView.setText(getActivity().getString(R.string.format_pressure, pressure));
+        mPressureView.setContentDescription(mPressureView.getText());
 
         // We still need this for the share intent
         mForecast = String.format("%s - %s - %s/%s", dateText, description, high, low);

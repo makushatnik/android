@@ -32,4 +32,6 @@
     <dimen name="font_large_96">96sp</dimen>
 
     <dimen name="container_size">210dp</dimen>
+
+    <dimen name="notify_large_icon_default">48dp</dimen>
 </resources>

@@ -9,8 +9,9 @@ import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.cdesign.sunshine.ui.ForecastFragment;
-import com.example.android.sunshine.app.R;
+import com.cdesign.sunshine.R;
 import com.cdesign.sunshine.utils.Utils;
 
 /**
@@ -92,36 +93,43 @@ public class ForecastAdapter extends CursorAdapter {
         // we'll keep the UI functional with a simple (and slow!) binding.
         ViewHolder viewHolder = (ViewHolder) view.getTag();
         int viewType = getItemViewType(cursor.getPosition());
+        int weatherId = cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID);
+        int fallbackIconId;
         switch (viewType) {
             case VIEW_TYPE_TODAY: {
-                viewHolder.iconView.setImageResource(Utils.getArtResourceForWeatherCondition(
-                        cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID)));
+                fallbackIconId = Utils.getArtResourceForWeatherCondition(weatherId);
                 break;
             }
-            case VIEW_TYPE_FUTURE_DAY: {
-                viewHolder.iconView.setImageResource(Utils.getIconResourceForWeatherCondition(
-                        cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID)));
+            default: {
+                fallbackIconId = Utils.getIconResourceForWeatherCondition(weatherId);
                 break;
             }
         }
+
+        Glide.with(mContext)
+                .load(Utils.getArtUrlForWeatherCondition(mContext, weatherId))
+                .error(fallbackIconId)
+                .crossFade()
+                .into(viewHolder.iconView);
 
         long dateInMillis = cursor.getLong(ForecastFragment.COL_WEATHER_DATE);
 
         viewHolder.dateView.setText(Utils.getFriendlyDayString(ctx, dateInMillis));
 
-        String description = cursor.getString(ForecastFragment.COL_WEATHER_DESC);
+        //String description = cursor.getString(ForecastFragment.COL_WEATHER_DESC);
+        String description = Utils.getStringForWeatherCondition(ctx, weatherId);
         viewHolder.descriptionView.setText(description);
-
-        viewHolder.iconView.setContentDescription(description);
-        boolean isMetric = Utils.isMetric(ctx);
+        viewHolder.descriptionView.setContentDescription(ctx.getString(R.string.a11y_forecast, description));
 
         // Read high temperature from cursor
-        double high = cursor.getDouble(ForecastFragment.COL_WEATHER_MAX_TEMP);
-        viewHolder.highTempView.setText(Utils.formatTemperature(ctx, high));
+        String high = Utils.formatTemperature(ctx, cursor.getDouble(ForecastFragment.COL_WEATHER_MAX_TEMP));
+        viewHolder.highTempView.setText(high);
+        viewHolder.highTempView.setContentDescription(ctx.getString(R.string.a11y_high_temp, high));
 
         // Read low temperature from cursor
-        double low = cursor.getDouble(ForecastFragment.COL_WEATHER_MIN_TEMP);
-        viewHolder.lowTempView.setText(Utils.formatTemperature(ctx, low));
+        String low = Utils.formatTemperature(ctx, cursor.getDouble(ForecastFragment.COL_WEATHER_MIN_TEMP));
+        viewHolder.lowTempView.setText(low);
+        viewHolder.lowTempView.setContentDescription(ctx.getString(R.string.a11y_low_temp, low));
     }
 
     public void setUseTodayLayout(boolean useTodayLayout) {

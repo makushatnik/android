@@ -10,8 +10,14 @@ public interface ConstantManager {
     String UNITS_PARAM = "units";
     String DAYS_PARAM = "cnt";
     String APPID_PARAM = "APPID";
-    String OPEN_WEATHER_MAP_API_KEY = "7653e043757c5196ede5f6f64629f9fd";
-
     String FORECAST_ID = "FORECAST_ID";
 
+    String SENT_TOKEN_TO_SERVER = "sentTokenToServer";
+
+    String GCM_EXTRA_DATA = "data";
+    String GCM_EXTRA_WEATHER = "weather";
+    String GCM_EXTRA_LOCATION = "location";
+
+    String FORECASTFRAGMENT_TAG = "FFTAG";
+    String DETAILFRAGMENT_TAG = "DFTAG";
 }

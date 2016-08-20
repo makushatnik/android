@@ -1,9 +1,11 @@
 package com.cdesign.sunshine.ui;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
@@ -16,15 +18,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cdesign.sunshine.data.ForecastAdapter;
-import com.example.android.sunshine.app.R;
+import com.cdesign.sunshine.R;
 import com.cdesign.sunshine.data.db.WeatherContract;
 import com.cdesign.sunshine.sync.SunshineSyncAdapter;
 import com.cdesign.sunshine.utils.Utils;
 
-public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor> {
+public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor>,
+        SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String LOG_TAG = ForecastFragment.class.getSimpleName();
     private ForecastAdapter mForecastAdapter;
 
@@ -64,8 +68,20 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+    }
 
-        updateWeather();
+    @Override
+    public void onPause() {
+        PreferenceManager.getDefaultSharedPreferences(getActivity())
+                .unregisterOnSharedPreferenceChangeListener(this);
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        PreferenceManager.getDefaultSharedPreferences(getActivity())
+                .registerOnSharedPreferenceChangeListener(this);
+        super.onResume();
     }
 
     @Override
@@ -113,6 +129,8 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
         mForecastAdapter = new ForecastAdapter(getActivity(), null, 0);
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         mListView = (ListView)rootView.findViewById(R.id.listview_forecast);
+        View emptyView = rootView.findViewById(R.id.listview_forecast_empty);
+        mListView.setEmptyView(emptyView);
         mListView.setAdapter(mForecastAdapter);
         mListView.setOnItemClickListener((adapterView, view, pos, id) -> {
             Cursor cursor = (Cursor) adapterView.getItemAtPosition(pos);
@@ -166,10 +184,36 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
         SunshineSyncAdapter.syncImmediately(getActivity());
     }
 
+    private void updateEmptyView() {
+        if (mForecastAdapter.getCount() == 0) {
+            TextView tv = (TextView) getView().findViewById(R.id.listview_forecast_empty);
+            if (null != tv) {
+                int msg = R.string.empty_forecast_list;
+                @SunshineSyncAdapter.LocationStatus int location = Utils.getLocationStatus(getActivity());
+                switch (location) {
+                    case SunshineSyncAdapter.LOCATION_STATUS_SERVER_DOWN:
+                        msg = R.string.empty_server_down;
+                        break;
+                    case SunshineSyncAdapter.LOCATION_STATUS_SERVER_INVALID:
+                        msg = R.string.empty_server_error;
+                        break;
+                    case SunshineSyncAdapter.LOCATION_STATUS_INVALID:
+                        msg = R.string.empty_invalid_location;
+                        break;
+                    default:
+                    if (!Utils.isNetworkAvailable(getActivity())) {
+                        msg = R.string.empty_no_network;
+                    }
+                }
+                tv.setText(msg);
+            }
+        }
+    }
     private void showToast(String message) {
         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
     }
 
+    //section ::::::::::::::: Loader ::::::::::::::::::::
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         String sortOrder = WeatherContract.WeatherEntry.COLUMN_DATE + " ASC";
@@ -191,13 +235,14 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
         if (mPosition != ListView.INVALID_POSITION) {
             mListView.smoothScrollToPosition(mPosition);
         }
+        updateEmptyView();
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mForecastAdapter.swapCursor(null);
     }
-
+    //end section
     /**
      * A callback interface that all activities containing this fragment must
      * implement. This mechanism allows activities to be notified of item
@@ -208,5 +253,12 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
          * DetailFragmentCallback for when an item has been selected.
          */
         public void onItemSelected(Uri dateUri);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+        if (key.equals(getString(R.string.pref_location_status_key))) {
+            updateEmptyView();
+        }
     }
 }
