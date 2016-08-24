@@ -1,0 +1,26 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/match"
+    android:elevation="@dimen/appbar_elevation"
+    tools:context="com.cdesign.sunshine.ui.ForecastFragment">
+
+    <android.support.v7.widget.RecyclerView
+        style="@style/ForecastListStyle"
+        android:id="@+id/recview_forecast"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <!-- empty list -->
+    <TextView
+        android:id="@+id/recview_forecast_empty"
+        android:text="@string/empty_forecast_list"
+        style="@style/match"
+        android:gravity="center_horizontal"
+        android:paddingRight="@dimen/spacing_normal_16"
+        android:paddingEnd="@dimen/spacing_normal_16"
+        android:paddingLeft="@dimen/spacing_normal_16"
+        android:paddingStart="@dimen/spacing_normal_16"
+        android:paddingTop="@dimen/spacing_normal_16"
+        android:paddingBottom="@dimen/spacing_normal_16"/>
+
+</FrameLayout>

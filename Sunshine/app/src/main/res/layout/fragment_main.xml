@@ -1,24 +1,26 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    style="@style/match"
-    tools:context="com.cdesign.sunshine.ui.ForecastFragment">
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/match">
 
-    <ListView
-        android:id="@+id/listview_forecast"
-        style="@style/ForecastListStyle"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@null"/>
-    <TextView
-        android:id="@+id/listview_forecast_empty"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recview_forecast"
         style="@style/match"
-        android:padding="@dimen/spacing_normal_16"
-        android:paddingStart="@dimen/spacing_normal_16"
-        android:paddingEnd="@dimen/spacing_normal_16"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <!-- empty list -->
+    <TextView
+        android:id="@+id/recview_forecast_empty"
+        style="@style/match"
+        app:layout_anchor="@+id/recview_forecast"
+        app:layout_anchorGravity="fill"
         android:gravity="center_horizontal"
-        android:text="@string/empty_forecast_list"
-        android:textSize="@dimen/font_small_24"
-        android:textColor="@color/red"
-        android:textStyle="bold"/>
+        android:paddingBottom="@dimen/spacing_normal_16"
+        android:paddingEnd="@dimen/spacing_normal_16"
+        android:paddingLeft="@dimen/spacing_normal_16"
+        android:paddingRight="@dimen/spacing_normal_16"
+        android:paddingStart="@dimen/spacing_normal_16"
+        android:paddingTop="@dimen/spacing_normal_16"
+        android:text="@string/empty_forecast_list" />
 
 </FrameLayout>

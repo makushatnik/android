@@ -5,4 +5,4 @@
     android:id="@+id/weather_detail_container"
     style="@style/match"
     tools:context="com.cdesign.sunshine.ui.DetailActivity"
-    tools:ignore="MergeRootFrame" />
+    tools:ignore="MergeRootFrame"/>

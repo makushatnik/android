@@ -33,6 +33,7 @@ import com.bumptech.glide.Glide;
 import com.cdesign.sunshine.BuildConfig;
 import com.cdesign.sunshine.R;
 import com.cdesign.sunshine.data.db.WeatherContract;
+import com.cdesign.sunshine.muzei.WeatherMuzeiSource;
 import com.cdesign.sunshine.ui.MainActivity;
 import com.cdesign.sunshine.utils.ConstantManager;
 import com.cdesign.sunshine.utils.Utils;
@@ -57,8 +58,7 @@ import java.util.concurrent.ExecutionException;
  */
 public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
     public static final String LOG_TAG = SunshineSyncAdapter.class.getSimpleName();
-    //public static final int SYNC_INTERVAL = 60 * 180;//3 hours
-    public static final int SYNC_INTERVAL = 60 * 60;
+    public static final int SYNC_INTERVAL = 60 * 180;//3 hours
     public static final int SYNC_FLEXTIME = SYNC_INTERVAL/3;
     private static final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
     private static final int WEATHER_NOTIFICATION_ID = 3004;
@@ -99,7 +99,10 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
     public void onPerformSync(Account account, Bundle extras, String autority,
                               ContentProviderClient contentProviderClient, SyncResult syncResult) {
         Log.d(LOG_TAG, "Starting sync");
+
         String locationQuery = Utils.getPreferredLocation(getContext());
+        String locationLongitude = "" + Utils.getLocationLongitude(getContext());
+        String locationLatitude = "" + Utils.getLocationLatitude(getContext());
 
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
@@ -111,8 +114,16 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
 
         try {
             //http://openweathermap.org/API#forecast
-            Uri builtUri = Uri.parse(ConstantManager.FORECAST_BASE_URI).buildUpon()
-                    .appendQueryParameter(ConstantManager.QUERY_PARAM, locationQuery)
+            Uri.Builder uriBuilder = Uri.parse(ConstantManager.FORECAST_BASE_URI).buildUpon();
+
+            if (Utils.isLocationLatLongAvailable(getContext())) {
+                uriBuilder.appendQueryParameter(ConstantManager.LAT_PARAM, locationLatitude)
+                        .appendQueryParameter(ConstantManager.LON_PARAM, locationLongitude);
+            } else {
+                uriBuilder.appendQueryParameter(ConstantManager.QUERY_PARAM, locationQuery);
+            }
+
+            Uri builtUri = uriBuilder
                     .appendQueryParameter(ConstantManager.FORMAT_PARAM, format)
                     .appendQueryParameter(ConstantManager.UNITS_PARAM, units)
                     .appendQueryParameter(ConstantManager.DAYS_PARAM, Integer.toString(numDays))
@@ -323,6 +334,8 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
                     WeatherContract.WeatherEntry.COLUMN_DATE + " <= ?",
                     new String[] {Long.toString(dayTime.setJulianDay(julianStartDay-1))});
 
+            updateWidgets();
+            updateMuzei();
             notifyWeather();
         }
 
@@ -445,6 +458,21 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
                 }
                 cursor.close();
             }
+        }
+    }
+
+    private void updateWidgets() {
+        Context ctx = getContext();
+        Intent dataUpdatedIntent = new Intent(ConstantManager.ACTION_DATA_UPDATED)
+                .setPackage(ctx.getPackageName());
+        ctx.sendBroadcast(dataUpdatedIntent);
+    }
+
+    private void updateMuzei() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            Context context = getContext();
+            context.startService(new Intent(ConstantManager.ACTION_DATA_UPDATED)
+                    .setClass(context, WeatherMuzeiSource.class));
         }
     }
 
