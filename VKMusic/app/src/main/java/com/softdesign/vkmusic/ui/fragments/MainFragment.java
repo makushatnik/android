@@ -77,12 +77,13 @@ public class MainFragment extends Fragment {
         setRetainInstance(true);
 
         Bundle args = getArguments();
+        if (args != null) {
+            mCurrentSong = args.getInt(ConstantManager.SONG_POSITION, 0);
+            myAudio = args.getBoolean(ConstantManager.MY_AUDIO, true);
+            mQuery = args.getString(ConstantManager.SEARCH_QUERY, "null");
+        }
 
         mSongs = new ArrayList<>();
-        mCurrentSong = args.getInt(ConstantManager.SONG_POSITION, 0);
-        myAudio = args.getBoolean(ConstantManager.MY_AUDIO, true);
-        mQuery = args.getString(ConstantManager.SEARCH_QUERY, "null");
-
         mPlayer = new AudioPlayer();
         mDataManager = DataManager.getInstance();
 
@@ -91,9 +92,6 @@ public class MainFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle saved) {
         View v = inflater.inflate(R.layout.fragment_main, parent, false);
-
-//        mControls = (RelativeLayout)v.findViewById(R.id.controls);
-//        mControls.setVisibility(View.VISIBLE);
 
         View emptyView = v.findViewById(R.id.empty_music_list);
         mSongsAdapter = new SongsAdapter(mSongs, new SongsAdapter.SongViewHolder.CustomClickListener() {
@@ -108,6 +106,8 @@ public class MainFragment extends Fragment {
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(mSongsAdapter);
+
+        mControls = (RelativeLayout)v.findViewById(R.id.controls);
 
         mPlay = (ImageView)v.findViewById(R.id.play);
         mPrev = (ImageView)v.findViewById(R.id.prev);
@@ -164,6 +164,10 @@ public class MainFragment extends Fragment {
 
         searchByQuery();
 
+        if (mSongs.size() == 0) {
+            mControls.setVisibility(View.INVISIBLE);
+        }
+
         return v;
     }
 
@@ -184,7 +188,7 @@ public class MainFragment extends Fragment {
 
         //params.put("count", 3);//limit the count
         Log.d(TAG, "myAudio = " + myAudio);
-        Log.d(TAG, "2 - " + (myAudio ? 1 : 0));
+        //Log.d(TAG, "2 - " + (myAudio ? 1 : 0));
 
         VKRequest request = VKApi.audio().search(params);
 

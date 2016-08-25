@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                        xmlns:app="http://schemas.android.com/apk/res-auto"
-                                        android:id="@+id/drawer_layout"
-                                        style="@style/match"
-                                        android:fitsSystemWindows="true">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/match"
+    android:fitsSystemWindows="true">
 
-    <android.support.design.widget.CoordinatorLayout
-        android:id="@+id/coordinator"
-        style="@style/match">
 
         <android.support.design.widget.AppBarLayout
+            android:id="@+id/appbar"
             style="@style/fill"
             android:theme="@style/AppTheme.AppBarOverlay">
 
@@ -18,7 +16,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="72dp"
                 android:background="@color/colorPrimary"
-                app:theme="@style/ToolBarStyle"
+                android:theme="@style/ToolBarStyle"
                 app:popupTheme="@style/AppTheme.PopupOverlay"
                 app:layout_collapseMode="pin">
 
@@ -41,7 +39,8 @@
                         android:gravity="center"
                         android:text="@string/app_name"
                         android:textSize="@dimen/font_medium_20"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold"
+                        android:textColor="@color/white"/>
 
                     <ImageView
                         android:id="@+id/logout_btn"
@@ -60,21 +59,39 @@
                 android:layout_height="1dp"
                 android:background="@color/black"/>
 
-            <android.support.design.widget.TabLayout
+            <LinearLayout
                 android:id="@+id/tab_layout"
-                style="@style/fill"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:orientation="horizontal"
                 app:layout_scrollFlags="scroll|snap">
-
-                <android.support.design.widget.TabItem
+                <TextView
                     android:id="@+id/search_tab"
-                    style="@style/wrap"
-                    android:text="@string/main.search"/>
-
-                <android.support.design.widget.TabItem
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/main.search"
+                    android:textSize="@dimen/font_medium_20"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:background="@drawable/tab_selector"/>
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/black"/>
+                <TextView
                     android:id="@+id/saved_tab"
-                    style="@style/wrap"
-                    android:text="@string/main.saved"/>
-            </android.support.design.widget.TabLayout>
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/main.saved"
+                    android:textSize="@dimen/font_medium_20"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:background="@drawable/tab_selector"/>
+            </LinearLayout>
 
         </android.support.design.widget.AppBarLayout>
 
@@ -82,10 +99,9 @@
         <FrameLayout
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/fragmentContainer"
-            style="@style/wrap"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/appbar"
             tools:context=".ui.activities.MainActivity"/>
 
-
-    </android.support.design.widget.CoordinatorLayout>
-
-</android.support.v4.widget.DrawerLayout>
+</RelativeLayout>

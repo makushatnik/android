@@ -11,4 +11,8 @@ public interface ConstantManager {
     String SONG_POSITION = "SONG_POSITION";
     String SEARCH_QUERY = "SEARCH_QUERY";
     String MY_AUDIO = "MY_AUDIO";
+
+    String MAIN_FRAGMENT_TAG = "main";
+    String SEARCH_FRAGMENT_TAG = "search";
+    String SAVED_FRAGMENT_TAG = "saved";
 }

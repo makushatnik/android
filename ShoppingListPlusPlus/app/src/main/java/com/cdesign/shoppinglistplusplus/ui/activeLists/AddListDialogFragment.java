@@ -13,13 +13,16 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.cdesign.shoppinglistplusplus.BuildConfig;
 import com.cdesign.shoppinglistplusplus.R;
+import com.cdesign.shoppinglistplusplus.model.ShoppingList;
+import com.firebase.client.Firebase;
 
 /**
  * Adds a new shopping list
  */
 public class AddListDialogFragment extends DialogFragment {
-    EditText mEditTextListName;
+    EditText mListName;
 
     /**
      * Public static constructor that creates fragment and
@@ -56,12 +59,12 @@ public class AddListDialogFragment extends DialogFragment {
         // Get the layout inflater
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View rootView = inflater.inflate(R.layout.dialog_add_list, null);
-        mEditTextListName = (EditText) rootView.findViewById(R.id.edit_text_list_name);
+        mListName = (EditText) rootView.findViewById(R.id.edit_text_list_name);
 
         /**
          * Call addShoppingList() when user taps "Done" keyboard action
          */
-        mEditTextListName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        mListName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
                 if (actionId == EditorInfo.IME_ACTION_DONE || keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
@@ -89,7 +92,13 @@ public class AddListDialogFragment extends DialogFragment {
      * Add new active list
      */
     public void addShoppingList() {
+        String listName = mListName.getText().toString().trim();
+        if (listName.isEmpty()) return;
 
+        ShoppingList shoppingList = new ShoppingList(listName, "Anonymous Owner");
+        Firebase ref = new Firebase(BuildConfig.FIREBASE_ROOT_URL);
+        ref.child("activeList").setValue(shoppingList);
+        //ref.child("listName").setValue(listName);
     }
 
 }

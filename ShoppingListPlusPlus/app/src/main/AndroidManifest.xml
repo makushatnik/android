@@ -3,7 +3,7 @@
     package="com.cdesign.shoppinglistplusplus">
 
     <application
-        android:name=".ShoppingListApplication"
+        android:name=".ShoppingListApplication_"
         android:allowBackup="true"
         android:icon="@mipmap/ic_shopping_list"
         android:label="@string/app_name"

@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.softdesign.vkmusic.R;
+import com.softdesign.vkmusic.ui.activities.MainActivity;
 import com.softdesign.vkmusic.utils.ConstantManager;
 
 /**
@@ -53,32 +54,30 @@ public class SearchFragment extends Fragment {
         mSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //searchByQuery();
-                mQuery = mQueryEdit.getText().toString().trim();
-                Log.d("SEARCH", "QUERY = " + mQuery);
-                FragmentManager fm = getFragmentManager();
-
-                MainFragment main = (MainFragment) fm.findFragmentByTag("main");
-                if (main == null) {
-                    Log.d("SEARCH", "NULL!");
-                    main = MainFragment.newInstance(mQuery, myAudio.isChecked(), 0);
-                    fm.beginTransaction()
-                            .add(main, "main")
-                            .commit();
-                } else {
-                    main.setSearchParams(mQuery, myAudio.isChecked());
-                    fm.beginTransaction()
-                            .replace(R.id.fragmentContainer, main, "main")
-                            .commit();
-                }
-                //main.setTargetFragment(SearchFragment.this, 0);
+                startSearch();
             }
         });
-
-        //searchByQuery();
 
         return v;
     }
 
+    private void startSearch() {
+        mQuery = mQueryEdit.getText().toString().trim();
+        Log.d("SEARCH", "QUERY = " + mQuery);
+        FragmentManager fm = getFragmentManager();
 
+        MainActivity ctx = (MainActivity) getActivity();
+        if (ctx != null) {
+            ctx.manageTabs(0);
+        }
+        MainFragment main = (MainFragment) fm.findFragmentByTag(ConstantManager.MAIN_FRAGMENT_TAG);
+        if (main == null) {
+            main = MainFragment.newInstance(mQuery, myAudio.isChecked(), 0);
+        }
+        main.setSearchParams(mQuery, myAudio.isChecked());
+        fm.beginTransaction()
+                .replace(R.id.fragmentContainer, main, ConstantManager.MAIN_FRAGMENT_TAG)
+                .commit();
+        //main.setTargetFragment(SearchFragment.this, 0);
+    }
 }

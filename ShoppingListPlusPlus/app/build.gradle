@@ -1,5 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'android-apt'
+def AAVersion = '4.1.0'
 
 android {
     compileSdkVersion 23
@@ -17,7 +19,14 @@ android {
 
         }
     }
-
+    buildTypes.each{
+        it.buildConfigField 'String','FIREBASE_ROOT_URL', FirebaseRootUrl
+    }
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE-FIREBASE.txt'
+        exclude 'META-INF/NOTICE'
+    }
 }
 
 dependencies {
@@ -31,5 +40,20 @@ dependencies {
     compile 'com.google.android.gms:play-services-safetynet:9.0.0'
     compile 'com.google.android.gms:play-services-auth:9.0.0'
     compile 'com.firebase:firebase-client-android:2.5.2'
-    compile "org.androidannotations:androidannotations-api:4.1.0"
+    compile "org.androidannotations:androidannotations-api:$AAVersion"
+    apt "org.androidannotations:androidannotations:$AAVersion"
+}
+
+apt {
+    arguments {
+        androidManifestFile variant.outputs[0]?.processResources?.manifestFile
+        // if you have multiple outputs (when using splits), you may want to have other index than 0
+
+        // you should set your package name here if you are using different application IDs
+        // resourcePackageName "your.package.name"
+
+        // You can set optional annotation processing options here, like these commented options:
+        // logLevel 'INFO'
+        // logFile '/var/log/aa.log'
+    }
 }

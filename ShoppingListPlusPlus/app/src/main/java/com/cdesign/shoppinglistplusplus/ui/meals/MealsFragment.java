@@ -24,13 +24,13 @@ import org.androidannotations.annotations.ViewById;
 public class MealsFragment extends Fragment {
 
     @ViewById(R.id.list_view_meals_list)
-    private ListView mListView;
+    ListView mListView;
 
     /**
      * Create fragment and pass bundle with data as its' arguments
      */
     public static MealsFragment newInstance() {
-        MealsFragment fragment = new MealsFragment();
+        MealsFragment fragment = new MealsFragment_();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -90,14 +90,14 @@ public class MealsFragment extends Fragment {
 //    }
 
     @AfterViews
-    private void initializeScreen(View rootView) {
+    void initializeScreen() {
         //mListView = (ListView) rootView.findViewById(R.id.list_view_meals_list);
         View footer = getActivity().getLayoutInflater().inflate(R.layout.footer_empty, null);
         mListView.addFooterView(footer);
     }
 
     @ItemClick(R.id.list_view_meals_list)
-    private void onListItemClick() {
+    void onListItemClick() {
         Toast.makeText(getActivity(), "It works now!", Toast.LENGTH_LONG).show();
     }
 }
