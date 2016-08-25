@@ -3,6 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/match">
 
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        style="@style/fill"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:elevation="@dimen/appbar_elevation">
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_height="?attr/actionBarSize"
@@ -22,15 +27,15 @@
         android:elevation="@dimen/appbar_elevation"
         android:background="@color/primary"
         android:contentDescription="@string/app_name"/>
-
+    </android.support.design.widget.AppBarLayout>
 
 
     <fragment
         android:id="@+id/fragment_forecast"
         android:name="com.cdesign.sunshine.ui.ForecastFragment"
-        android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:layout_below="@id/weather_detail_container"
+        android:layout_height="match_parent"
+        android:layout_below="@id/appbar"
         tools:layout="@android:layout/list_content" />
 
 </RelativeLayout>

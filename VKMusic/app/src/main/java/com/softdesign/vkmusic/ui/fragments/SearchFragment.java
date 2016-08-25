@@ -1,43 +1,25 @@
 package com.softdesign.vkmusic.ui.fragments;
 
 import android.app.Fragment;
-import android.os.Bundle;
 import android.app.FragmentManager;
-import android.support.v7.widget.RecyclerView;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.softdesign.vkmusic.R;
-import com.softdesign.vkmusic.data.model.Song;
 import com.softdesign.vkmusic.utils.ConstantManager;
-import com.vk.sdk.VKSdk;
-import com.vk.sdk.api.VKApi;
-import com.vk.sdk.api.VKError;
-import com.vk.sdk.api.VKParameters;
-import com.vk.sdk.api.VKRequest;
-import com.vk.sdk.api.VKResponse;
-import com.vk.sdk.api.model.VKApiAudio;
-import com.vk.sdk.api.model.VKList;
-import com.vk.sdk.api.model.VkAudioArray;
-
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Ageev Evgeny on 26.07.2016.
  */
 public class SearchFragment extends Fragment {
+    private static final String TAG = SearchFragment.class.getSimpleName();
+
     private EditText mQueryEdit;
     private String mQuery;
     private ImageView mSearch;

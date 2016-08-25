@@ -2,6 +2,7 @@ package com.softdesign.vkmusic.ui.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,12 +21,23 @@ import java.util.List;
 public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHolder> {
     private Context mContext;
     private List<Song> mSongs;
+    private final View mEmptyView;
+    //private final ItemChoiceManager mICM;
 
     private SongViewHolder.CustomClickListener mListener;
 
-    public SongsAdapter(List<Song> songs, SongViewHolder.CustomClickListener listener) {
+    public SongsAdapter(List<Song> songs,
+                        SongViewHolder.CustomClickListener listener,
+                        View emptyView,
+                        int choiceMode) {
         mSongs = songs;
         mListener = listener;
+        mEmptyView = emptyView;
+        if (mEmptyView != null) {
+            mEmptyView.setVisibility(View.VISIBLE);
+        }
+//        mICM = new ItemChoiceManager(this);
+//        mICM.setChoiceMode(choiceMode);
     }
 
     @Override
@@ -50,6 +62,22 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
 
     @Override
     public int getItemCount() { return mSongs.size(); }
+
+    public void receiveData() {
+        Log.d("SongsAdapter", "Songs count - " + getItemCount());
+        notifyDataSetChanged();
+        if (mEmptyView != null) {
+            mEmptyView.setVisibility(getItemCount() == 0 ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    public void receiveData(List<Song> newList) {
+        mSongs = newList;
+        notifyDataSetChanged();
+        if (mEmptyView != null) {
+            mEmptyView.setVisibility(getItemCount() == 0 ? View.VISIBLE : View.GONE);
+        }
+    }
 
     public static class SongViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         protected TextView mAuthor, mTitle;

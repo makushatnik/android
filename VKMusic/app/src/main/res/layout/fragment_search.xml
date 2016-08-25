@@ -1,21 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              style="@style/fill"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              style="@style/match"
               android:layout_marginTop="@dimen/spacing_small_8"
               android:layout_marginLeft="@dimen/spacing_normal_16"
-              android:layout_marginRight="@dimen/spacing_normal_16"
-              android:orientation="vertical">
+              android:layout_marginRight="@dimen/spacing_normal_16">
 
-    <LinearLayout
-        style="@style/fill"
-        android:layout_marginBottom="@dimen/spacing_small_8"
-        android:orientation="horizontal">
     <EditText
         android:id="@+id/search_et"
-        android:layout_width="0dp"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:layout_gravity="center"
+        android:text="111111"
         android:hint="@string/search.search_txt_hint"
         android:maxLength="@integer/query_max_length"/>
 
@@ -23,15 +18,16 @@
         android:id="@+id/search_btn"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_gravity="right"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:src="@drawable/search"/>
-    </LinearLayout>
 
     <CheckBox
         android:id="@+id/my_audio_cbx"
         style="@style/fill"
+        android:layout_below="@+id/search_et"
         android:text="@string/search.my_audio"
         android:textSize="@dimen/font_medium_20"
         android:checked="true"
         android:focusable="false"/>
-</LinearLayout>
+</RelativeLayout>

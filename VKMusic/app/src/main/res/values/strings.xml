@@ -25,4 +25,7 @@
     <string name="search.search_txt_hint">Поисковый запрос</string>
     <string name="search.search_btn">Найти</string>
     <string name="search.my_audio">Мои аудиозаписи</string>
+
+    <string name="empty_music_list">No music composition found!</string>
+    <string name="empty_saved_list">No music compositions was saved!</string>
 </resources>

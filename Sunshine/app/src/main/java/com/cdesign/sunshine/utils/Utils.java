@@ -1,5 +1,6 @@
 package com.cdesign.sunshine.utils;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
@@ -8,12 +9,14 @@ import android.preference.PreferenceManager;
 import android.text.format.Time;
 
 import com.cdesign.sunshine.R;
+import com.cdesign.sunshine.data.db.WeatherContract;
 import com.cdesign.sunshine.sync.SunshineSyncAdapter;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Vector;
 
 /**
  * Created by Ageev Evgeny on 06.08.2016.
@@ -501,5 +504,44 @@ public class Utils {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         return prefs.getFloat(ctx.getString(R.string.pref_location_longitude_key),
                 DEFAULT_LATLONG);
+    }
+
+    public static void createFakeData(Context ctx) {
+        int size = 15;
+        long locationId = 94043;
+        String description = "Cloudy";
+        int weatherId = 1;
+        Time dayTime = new Time();
+        dayTime.setToNow();
+        int julianStartDay = Time.getJulianDay(System.currentTimeMillis(), dayTime.gmtoff);
+        double pressure = 23;
+        int humidity = 232;
+        double windSpeed = 32;
+        double windDirection = 664;
+        double high = 54;
+        double low = 24;
+        Vector<ContentValues> cVVector = new Vector<ContentValues>(size);
+        for (int i=0; i < size; i++) {
+            long dateTime = dayTime.setJulianDay(julianStartDay + i);
+
+            ContentValues weatherValues = new ContentValues();
+            weatherValues.put(WeatherContract.WeatherEntry.COLUMN_LOC_KEY, locationId);
+            weatherValues.put(WeatherContract.WeatherEntry.COLUMN_DATE, dateTime);
+            weatherValues.put(WeatherContract.WeatherEntry.COLUMN_HUMIDITY, humidity);
+            weatherValues.put(WeatherContract.WeatherEntry.COLUMN_PRESSURE, pressure);
+            weatherValues.put(WeatherContract.WeatherEntry.COLUMN_WIND_SPEED, windSpeed);
+            weatherValues.put(WeatherContract.WeatherEntry.COLUMN_DEGREES, windDirection);
+            weatherValues.put(WeatherContract.WeatherEntry.COLUMN_MAX_TEMP, high);
+            weatherValues.put(WeatherContract.WeatherEntry.COLUMN_MIN_TEMP, low);
+            weatherValues.put(WeatherContract.WeatherEntry.COLUMN_SHORT_DESC, description);
+            weatherValues.put(WeatherContract.WeatherEntry.COLUMN_WEATHER_ID, weatherId);
+            cVVector.add(weatherValues);
+        }
+
+        if (cVVector.size() > 0) {
+            ContentValues[] cvArray = new ContentValues[cVVector.size()];
+            cVVector.toArray(cvArray);
+            ctx.getContentResolver().bulkInsert(WeatherContract.WeatherEntry.CONTENT_URI, cvArray);
+        }
     }
 }

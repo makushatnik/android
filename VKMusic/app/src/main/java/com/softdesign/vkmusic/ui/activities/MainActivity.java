@@ -3,8 +3,6 @@ package com.softdesign.vkmusic.ui.activities;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
-import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
@@ -12,23 +10,15 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.SeekBar;
-import android.widget.TextView;
 
 import com.softdesign.vkmusic.R;
 import com.softdesign.vkmusic.data.managers.DataManager;
-import com.softdesign.vkmusic.data.model.Song;
 import com.softdesign.vkmusic.ui.fragments.MainFragment;
 import com.softdesign.vkmusic.ui.fragments.SavedFragment;
 import com.softdesign.vkmusic.ui.fragments.SearchFragment;
-import com.softdesign.vkmusic.utils.AudioPlayer;
-import com.softdesign.vkmusic.utils.ConstantManager;
 import com.softdesign.vkmusic.utils.NetworkStatusChecker;
 import com.vk.sdk.VKAccessToken;
-import com.vk.sdk.VKAccessTokenTracker;
 import com.vk.sdk.VKCallback;
-import com.vk.sdk.VKScope;
 import com.vk.sdk.VKSdk;
 import com.vk.sdk.api.VKError;
 
@@ -39,7 +29,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private ImageView mSettings, mLogout;
     private TabLayout mTabLayout;
     private TabItem mSearchTab, mSavedTab;
-    private int accentColorId, primaryColorId;
+    //private int accentColorId, primaryColorId;
 
     private String mQuery;
 
@@ -56,14 +46,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
         //mToolbar.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         mSettings = (ImageView) findViewById(R.id.settings_btn);
         mSettings.setOnClickListener(this);
         mLogout = (ImageView) findViewById(R.id.logout_btn);
         mLogout.setOnClickListener(this);
 
-        accentColorId = getResources().getColor(R.color.colorAccent);
-        primaryColorId = getResources().getColor(R.color.colorPrimary);
+        //accentColorId = getResources().getColor(R.color.colorAccent);
+        //primaryColorId = getResources().getColor(R.color.colorPrimary);
 
         mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
         mSearchTab = (TabItem) findViewById(R.id.search_tab);
@@ -78,10 +70,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     //mSearchTab.setBackgroundColor(accentColorId);
                     Log.d(TAG, "SELECTED = " + tab.isSelected());
                     //mSavedTab.setBackgroundColor(primaryColorId);
-                    showFragment(SearchFragment.newInstance(mQuery), "search");
+                    showFragment("search");
                 } else if(tab.getPosition() == 1) {
                     Log.d(TAG, "TAB SELECTED3!!!!!!");
-                    showFragment(new SavedFragment(), "saved");
+                    showFragment("saved");
                 }
             }
 
@@ -91,9 +83,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             @Override
             public void onTabReselected(TabLayout.Tab tab) {}
         });
-        mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        mTabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
 
         signIn();
+        showFragment("main");
     }
 
     @Override
@@ -103,7 +96,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             public void onResult(VKAccessToken res) {
                 showToast(getString(R.string.notify_auth_by_VK));
                 mDataManager.getPreferencesManager().saveVKAuthToken(res);
-                showFragment(MainFragment.newInstance(mQuery, false, 0), "main");
+                //showFragment("main");
             }
 
             @Override
@@ -158,14 +151,24 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private void signIn() {
         if (NetworkStatusChecker.isNetworkAvailable(this)) {
-            VKSdk.login(this, VKScope.AUDIO);
+            //VKSdk.login(this, VKScope.AUDIO);
         } else {
             showSnackbar("Сеть на данный момент не доступна, попробуйте позже");
         }
     }
 
-    private void showFragment(Fragment fragment, String tag) {
+    private void showFragment(String tag) {
         FragmentManager fm = getFragmentManager();
+        Fragment fragment = fm.findFragmentByTag(tag);
+        if (fragment == null) {
+            if (tag.equals("search")) {
+                fragment = SearchFragment.newInstance(mQuery);
+            } else if (tag.equals("saved")) {
+                fragment = new SavedFragment();
+            } else {
+                fragment = MainFragment.newInstance(mQuery, true, 0);
+            }
+        }
         //Fragment fragment = fm.findFragmentById(R.id.fragmentContainer);
 
 //        if (fragment == null) {

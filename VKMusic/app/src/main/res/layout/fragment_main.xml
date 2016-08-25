@@ -1,10 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                style="@style/match">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/match">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/audio_list"
+        android:id="@+id/recview_music"
         style="@style/recycler_view"/>
+
+    <TextView
+        android:id="@+id/empty_music_list"
+        style="@style/match"
+        app:layout_anchor="@+id/recview_music"
+        app:layout_anchorGravity="fill"
+        android:gravity="center"
+        android:paddingBottom="@dimen/spacing_normal_16"
+        android:paddingEnd="@dimen/spacing_normal_16"
+        android:paddingLeft="@dimen/spacing_normal_16"
+        android:paddingRight="@dimen/spacing_normal_16"
+        android:paddingStart="@dimen/spacing_normal_16"
+        android:paddingTop="@dimen/spacing_normal_16"
+        android:text="@string/empty_music_list"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold"/>
 
     <RelativeLayout
         android:id="@+id/controls"

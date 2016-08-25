@@ -6,6 +6,7 @@
                                         android:fitsSystemWindows="true">
 
     <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/coordinator"
         style="@style/match">
 
         <android.support.design.widget.AppBarLayout
@@ -21,28 +22,37 @@
                 app:popupTheme="@style/AppTheme.PopupOverlay"
                 app:layout_collapseMode="pin">
 
-                <RelativeLayout
-                    style="@style/wrap">
-                <ImageView
-                    android:id="@+id/settings_btn"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
-                    android:layout_alignParentLeft="true"
-                    android:src="@drawable/servis"
-                    android:contentDescription="@string/settings.title"
-                    android:fitsSystemWindows="true"/>
-                </RelativeLayout>
+                <LinearLayout
+                    style="@style/fill"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:id="@+id/settings_btn"
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+                        android:layout_alignParentLeft="true"
+                        android:src="@drawable/servis"
+                        android:contentDescription="@string/settings.title"
+                        android:fitsSystemWindows="true"/>
 
-                <ImageView
-                    android:id="@+id/logout_btn"
-                    android:layout_width="24dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right|center_vertical"
-                    android:layout_marginRight="@dimen/spacing_normal_16"
-                    android:layout_weight="0.5"
-                    android:src="@drawable/off"
-                    android:contentDescription="@string/main.logout"
-                    android:cropToPadding="false"/>
+                    <TextView
+                        style="@style/match"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/app_name"
+                        android:textSize="@dimen/font_medium_20"
+                        android:textStyle="bold"/>
+
+                    <ImageView
+                        android:id="@+id/logout_btn"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="right|center_vertical"
+                        android:layout_marginRight="@dimen/spacing_normal_16"
+                        android:src="@drawable/off"
+                        android:contentDescription="@string/main.logout"
+                        android:cropToPadding="false"/>
+                </LinearLayout>
             </android.support.v7.widget.Toolbar>
 
             <View
@@ -69,11 +79,13 @@
         </android.support.design.widget.AppBarLayout>
 
 
-        <include layout="@layout/content"/>
+        <FrameLayout
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/fragmentContainer"
+            style="@style/wrap"
+            tools:context=".ui.activities.MainActivity"/>
 
 
     </android.support.design.widget.CoordinatorLayout>
-
-
 
 </android.support.v4.widget.DrawerLayout>

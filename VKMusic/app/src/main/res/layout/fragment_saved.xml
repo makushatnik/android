@@ -1,6 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/match">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recview_saved"
+        style="@style/recycler_view"/>
+
+    <TextView
+        android:id="@+id/empty_saved_list"
+        style="@style/match"
+        app:layout_anchor="@+id/recview_saved"
+        app:layout_anchorGravity="fill"
+        android:gravity="center"
+        android:paddingBottom="@dimen/spacing_normal_16"
+        android:paddingEnd="@dimen/spacing_normal_16"
+        android:paddingLeft="@dimen/spacing_normal_16"
+        android:paddingRight="@dimen/spacing_normal_16"
+        android:paddingStart="@dimen/spacing_normal_16"
+        android:paddingTop="@dimen/spacing_normal_16"
+        android:text="@string/empty_saved_list"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold"/>
 
 </FrameLayout>

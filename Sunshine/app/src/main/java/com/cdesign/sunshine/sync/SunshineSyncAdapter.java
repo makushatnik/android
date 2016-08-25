@@ -470,9 +470,13 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
 
     private void updateMuzei() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            Context context = getContext();
-            context.startService(new Intent(ConstantManager.ACTION_DATA_UPDATED)
-                    .setClass(context, WeatherMuzeiSource.class));
+            Context ctx = getContext();
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+            boolean isSetWallpaper = prefs.getBoolean("set_wallpaper", false);
+            if (isSetWallpaper) {
+                ctx.startService(new Intent(ConstantManager.ACTION_DATA_UPDATED)
+                        .setClass(ctx, WeatherMuzeiSource.class));
+            }
         }
     }
 

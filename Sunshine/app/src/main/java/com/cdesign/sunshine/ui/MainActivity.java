@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
         }
 
         SunshineSyncAdapter.initializeSyncAdapter(this);
+        Utils.createFakeData(this);
 
         if (checkPlayServices()) {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);

@@ -31,4 +31,11 @@
         android:defaultValue="@string/pref_notify_default"
         android:summaryOff="@string/pref_notify_false"
         android:summaryOn="@string/pref_notify_true"/>
+
+    <CheckBoxPreference
+        android:key="@string/pref_set_wall_key"
+        android:title="@string/pref_set_wall_label"
+        android:defaultValue="@string/pref_set_wall_default"
+        android:summaryOff="@string/pref_set_wall_false"
+        android:summaryOn="@string/pref_set_wall_true"/>
 </PreferenceScreen>

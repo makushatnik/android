@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -19,7 +18,6 @@ import android.widget.TextView;
 import com.softdesign.vkmusic.R;
 import com.softdesign.vkmusic.data.managers.DataManager;
 import com.softdesign.vkmusic.data.model.Song;
-
 import com.softdesign.vkmusic.ui.adapters.SongsAdapter;
 import com.softdesign.vkmusic.utils.AudioPlayer;
 import com.softdesign.vkmusic.utils.Common;
@@ -33,8 +31,6 @@ import com.vk.sdk.api.model.VKApiAudio;
 import com.vk.sdk.api.model.VKList;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,6 +43,7 @@ public class MainFragment extends Fragment {
     private SongsAdapter mSongsAdapter;
     private RecyclerView mRecyclerView;
     private int mCurrentSong;
+    private int mChoiceMode;
 
     private RelativeLayout mControls;
     private ImageView mPlay, mPrev, mNext, mShuffle, mRepeat;
@@ -77,9 +74,10 @@ public class MainFragment extends Fragment {
     @Override
     public void onCreate(Bundle saved) {
         super.onCreate(saved);
+        setRetainInstance(true);
 
         Bundle args = getArguments();
-        //mSongs = (ArrayList<Song>) args.getSerializable(ConstantManager.SONG_LIST);
+
         mSongs = new ArrayList<>();
         mCurrentSong = args.getInt(ConstantManager.SONG_POSITION, 0);
         myAudio = args.getBoolean(ConstantManager.MY_AUDIO, true);
@@ -97,10 +95,19 @@ public class MainFragment extends Fragment {
 //        mControls = (RelativeLayout)v.findViewById(R.id.controls);
 //        mControls.setVisibility(View.VISIBLE);
 
-        mRecyclerView = (RecyclerView)v.findViewById(R.id.audio_list);
+        View emptyView = v.findViewById(R.id.empty_music_list);
+        mSongsAdapter = new SongsAdapter(mSongs, new SongsAdapter.SongViewHolder.CustomClickListener() {
+            @Override
+            public void onSongClickListener(int pos) {
+                mCurrentSong = pos;
+            }
+        }, emptyView, mChoiceMode);
+
+        mRecyclerView = (RecyclerView)v.findViewById(R.id.recview_music);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setAdapter(mSongsAdapter);
 
         mPlay = (ImageView)v.findViewById(R.id.play);
         mPrev = (ImageView)v.findViewById(R.id.prev);
@@ -174,6 +181,7 @@ public class MainFragment extends Fragment {
         params.put("performer_only", 0);//by author
         params.put("sort", 2);//2 - popular, 1 - duration, 0 - date
         params.put("search_own", (myAudio ? 1 : 0));
+
         //params.put("count", 3);//limit the count
         Log.d(TAG, "myAudio = " + myAudio);
         Log.d(TAG, "2 - " + (myAudio ? 1 : 0));
@@ -205,15 +213,7 @@ public class MainFragment extends Fragment {
                     mSongs.add(song);
                 }
 
-                mSongsAdapter = new SongsAdapter(mSongs, new SongsAdapter.SongViewHolder.CustomClickListener() {
-                    @Override
-                    public void onSongClickListener(int pos) {
-                        Song song = mSongs.get(pos);
-                        downloadSong(song.getName(), song.getUrl());
-                    }
-                });
-                mRecyclerView.setAdapter(mSongsAdapter);
-                mSongsAdapter.notifyDataSetChanged();
+                mSongsAdapter.receiveData(mSongs);
             }
 
             @Override

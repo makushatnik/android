@@ -11,13 +11,11 @@ public class DataManager {
     private static DataManager INSTANCE = null;
 
     private Context mContext;
-    //private RestService mRestService;
     private final PreferencesManager mPreferencesManager;
 
     private DataManager() {
         mPreferencesManager = new PreferencesManager();
         mContext = VKMusicApplication.getContext();
-        //mRestService = ServiceGenerator.createService(RestService.class);
     }
 
     public static DataManager getInstance() {

@@ -21,6 +21,8 @@
         android:paddingRight="@dimen/spacing_normal_16"
         android:paddingStart="@dimen/spacing_normal_16"
         android:paddingTop="@dimen/spacing_normal_16"
-        android:text="@string/empty_forecast_list" />
+        android:text="@string/empty_forecast_list"
+        android:textColor="@color/red"
+        android:textStyle="bold"/>
 
 </FrameLayout>

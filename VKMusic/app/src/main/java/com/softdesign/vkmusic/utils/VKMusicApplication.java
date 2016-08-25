@@ -10,7 +10,6 @@ import com.softdesign.vkmusic.R;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKAccessTokenTracker;
 import com.vk.sdk.VKSdk;
-import com.vk.sdk.util.VKUtil;
 
 /**
  * Created by Ageev Evgeny on 13.07.2016.
@@ -37,10 +36,11 @@ public class VKMusicApplication extends Application {
         sSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         vkAccessTokenTracker.startTracking();
         VKSdk.initialize(this);
+
         //fingerprints = VKUtil.getCertificateFingerprint(this, this.getPackageName());
         //VKSdk.customInitialize(this, R.integer.com_vk_sdk_AppId, fingerprints[0]);
-//        VKSdk.customInitialize(this, R.integer.com_vk_sdk_AppId, VKAccessToken
-//                .tokenFromSharedPreferences(this, "VK_ACCESS_TOKEN").accessToken);
+        VKSdk.customInitialize(this, R.integer.com_vk_sdk_AppId, VKAccessToken
+                .tokenFromSharedPreferences(this, "VK_ACCESS_TOKEN").accessToken);
     }
 
     VKAccessTokenTracker vkAccessTokenTracker = new VKAccessTokenTracker() {

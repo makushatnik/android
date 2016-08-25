@@ -32,8 +32,6 @@ public class PreferencesManager {
     public void VKLogout() {
         VKSdk.logout();                         //vk logout
         VKAccessToken.removeTokenAtKey(mContext, ConstantManager.VK_ACCESS_TOKEN);
-        //SharedPreferences.Editor editor = mSharedPreferences.edit();
-        //editor.clear().apply();
     }
     //endregion
 }
